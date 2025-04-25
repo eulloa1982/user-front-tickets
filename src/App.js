@@ -4,20 +4,13 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <iframe 
+        title='Azure Form'
+        width="100%" height="100%" 
+        src="https://forms.office.com/Pages/ResponsePage.aspx?id=EK0Tc4W4UEucdZ272XVhjynx0fUjSN5GslWd2pB-yeFUM00zNklFT1U3UUVFU0pGOEswM1pOQVJFMC4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" 
+        style={{ border: "none", maxWidth:'100%', height:'100vh'}} 
+        allowfullscreen> 
+        </iframe>
     </div>
   );
 }
