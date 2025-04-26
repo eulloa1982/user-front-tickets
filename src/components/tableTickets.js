@@ -97,8 +97,9 @@ function TableTickets() {
               <TableRow>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Assigned Agent</TableCell>
+                <TableCell sx={{ width: 30 }}>Status</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell sx={{ width: 60 }}>Assigned Agent</TableCell>
                 <TableCell>Created At</TableCell>
               </TableRow>
             </TableHead>
@@ -108,7 +109,8 @@ function TableTickets() {
                   <TableCell>{ticket.title}</TableCell>
                   <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
                   <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
-                  <TableCell>{ticket.name}</TableCell>
+                  <TableCell>{ticket.category_name}</TableCell>
+                  <TableCell>{ticket.aget_name}</TableCell>
                   <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
