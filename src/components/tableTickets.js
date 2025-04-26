@@ -12,11 +12,11 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
   } from '@mui/material';
 
-const rows = [
+/*const rows = [
   { id: 101, subject: 'Error al iniciar sesión', status: 'Abierto' },
   { id: 102, subject: 'Solicitud de acceso', status: 'Pendiente' },
   { id: 103, subject: 'Reinicio de contraseña', status: 'Cerrado' },
-];
+];*/
 
 export default function TableTickets() {
     const user = useAzureUser();
