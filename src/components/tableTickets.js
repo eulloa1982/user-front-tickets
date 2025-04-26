@@ -20,16 +20,7 @@ import {
 
 export default function TableTickets() {
     
-    const { user, loading, error } = useAzureUser();
-
-  if (loading) {
-    return <p>Cargando usuario...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
+  const user = useAzureUser();
     //const user = 'esteban'
     //const {data, loading, error} = useAzureUser(url);
     //const user = useAzureUser();
