@@ -21,8 +21,8 @@ import {
 export default function TableTickets() {
     
   const { user, loading, error, getUser } = useAzureUser();
-  console.log(getUser);
-  
+  console.log(user);
+
   return (
     <div>
       <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
@@ -32,11 +32,11 @@ export default function TableTickets() {
       {loading && <p>Cargando usuario...</p>}
       {error && <p>Error: {error.message}</p>}
 
-      {user && (
-        <div>
-          <h1>Hola {user.user_claims.find(c => c.typ === 'name')?.val}!</h1>
-        </div>
-      )}
+      {user ? (
+      <h1>Hola {user.clientPrincipal.userDetails} 👋</h1>
+    ) : (
+      <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
+    )}
     </div>
   );
     //const user = 'esteban'
