@@ -1,17 +1,37 @@
+import React, { useState } from 'react';
 import './App.css';
+import IframeForm from './components/iframeForm'; // <- nombre de componente en mayúscula
+import TableTickets from './components/tableTickets';
+import ButtonAppBar from './components/navbar';
+import { Box } from '@mui/material';
 
 function App() {
+  const [seccion, setSeccion] = useState("myTickets");
+
+  const renderContenido = () => {
+    switch (seccion) {
+      case "myForm":
+        return <IframeForm />;
+      case "myTickets":
+        return <TableTickets />;
+      case "email":
+        return <div>Enviar correo</div>;
+      case "reports":
+        return <div>Mis reportes</div>;
+      default:
+        return <IframeForm />;
+    }
+  };
+
   return (
-    <div className="App">
-      <iframe 
-        title='Azure Form'
-        width="100%" height="100%" 
-        src="https://forms.office.com/Pages/ResponsePage.aspx?id=EK0Tc4W4UEucdZ272XVhjynx0fUjSN5GslWd2pB-yeFUM00zNklFT1U3UUVFU0pGOEswM1pOQVJFMC4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" 
-        style={{ border: "none", maxWidth:'100%', height:'100vh'}} 
-        allowfullscreen> 
-        </iframe>
+    <div>
+      <ButtonAppBar onMenuClick={setSeccion} />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+        {renderContenido()}
+      </Box>
     </div>
   );
 }
 
 export default App;
+
