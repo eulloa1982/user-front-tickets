@@ -16,7 +16,7 @@ const menuItems = [
   { label: 'My tickets', icon: <InboxIcon />, key: 'myTickets' },
   { label: 'New Ticket', icon: <MailIcon />, key: 'myForm' },
   //{ label: 'Send email', icon: <MailIcon />, key: 'email' },
-  { label: 'My Reports', icon: <InboxIcon />, key: 'reports' },
+  //{ label: 'My Reports', icon: <InboxIcon />, key: 'reports' },
 ];
 
 export default function LeftBar({ state, toggleDrawer, onMenuClick }) {
