@@ -111,10 +111,10 @@ export default function TableTickets() {
           <TableBody>
             {tickets.map((ticket) => (
               <TableRow key={ticket.ticket_id}>
-                <TableCell sx={{ width: 10 }}>{ticket.id}</TableCell>
+                <TableCell sx={{ width: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.id}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                <TableCell sx={{ width: 20 }}>{renderStatusIcon(ticket.status)}</TableCell>
+                <TableCell sx={{ width: 20, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{renderStatusIcon(ticket.status)}</TableCell>
                 <TableCell>{ticket.name}</TableCell>
                 <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
