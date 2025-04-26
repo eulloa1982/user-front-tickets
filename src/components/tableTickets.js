@@ -78,20 +78,24 @@ export default function TableTickets() {
         <Table sx={{ tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow>
+              <TableCell>Priority</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
-              <TableCell sx={{ width: 10 }}>Status</TableCell>
-              <TableCell>Assigned Agent</TableCell>
+              <TableCell sx={{ width: 30 }}>Status</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell sx={{ width: 60 }}>Assigned Agent</TableCell>
               <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tickets.map((ticket) => (
               <TableRow key={ticket.ticket_id}>
+                <TableCell>{ticket.priority}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
                 <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
-                <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.name}</TableCell>
+                <TableCell>{ticket.category_name}</TableCell>
+                <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.agent_name}</TableCell>
                 <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
