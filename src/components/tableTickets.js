@@ -21,7 +21,7 @@ import {
 export default function TableTickets() {
     const user = useAzureUser();
     const [tickets, setTickets] = useState([]);
-  
+    console.log(user)
     useEffect(() => {
       if (!user) return;
   

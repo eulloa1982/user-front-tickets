@@ -13,7 +13,6 @@ const useAzureUser = () => {
       .catch(err => console.error('Error al obtener usuario:', err));
   }, []);
 
-  console.log(user);
   return user;
 };
 
