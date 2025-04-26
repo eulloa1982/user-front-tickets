@@ -63,7 +63,7 @@ export default function TableTickets() {
       <h1>Hola {user.userDetails} 👋</h1>
 
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ tableLayout: 'fixed', width: '100%' }}>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
