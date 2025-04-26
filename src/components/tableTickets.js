@@ -16,7 +16,7 @@ import {
 
 export default function TableTickets() {
     
-  const { user, loading, error} = useAzureUser();
+  const { user, loading: loadingUser, error: errorUser } = useAzureUser();
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
