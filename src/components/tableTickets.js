@@ -37,8 +37,8 @@ export default function TableTickets() {
           return res.json();
         })
         .then(data => {
-          console.log(data)
-          setTickets(data['ResultSets']['Table1'].tickets || []); // Ajusta si tu respuesta tiene otra estructura
+          console.log(data['ResultSets']['Table1'])
+          setTickets(data['ResultSets']['Table1'] || []); // Ajusta si tu respuesta tiene otra estructura
           setLoadingTickets(false);
         })
         .catch(err => {
@@ -67,18 +67,20 @@ export default function TableTickets() {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Asunto</TableCell>
-              <TableCell>Estado</TableCell>
-              <TableCell>Fecha Creación</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tickets.map((ticket) => (
-              <TableRow key={ticket.id}>
+              <TableRow key={ticket.ticket_id}>
                 <TableCell>{ticket.id}</TableCell>
-                <TableCell>{ticket.subject}</TableCell>
+                <TableCell>{ticket.title}</TableCell>
+                <TableCell>{ticket.description}</TableCell>
                 <TableCell>{ticket.status}</TableCell>
-                <TableCell>{new Date(ticket.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
