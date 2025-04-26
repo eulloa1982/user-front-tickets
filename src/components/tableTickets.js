@@ -1,21 +1,21 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip, Button, Drawer, Box
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip, Box
 } from '@mui/material';
+
+import useAzureUser from './getUserDetails';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import useAzureUser from './getUserDetails';
-import TicketsChart from './ticketsChart'; // 👈 nuevo componente de gráficos
 
-export default function TableTickets() {
+import TicketDashboard from './ticketDashboard'; // 👈 Importamos el dashboard nuevo
+
+function TableTickets() {
   const { user, loading: loadingUser, error: errorUser } = useAzureUser();
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
-  const [openDrawer, setOpenDrawer] = useState(false); // 👈 Drawer control
 
   const renderStatusIcon = (status) => {
     switch (status) {
@@ -31,6 +31,28 @@ export default function TableTickets() {
       default:
         return null;
     }
+  };
+
+  const getStatusChartData = () => {
+    const counts = tickets.reduce((acc, ticket) => {
+      acc[ticket.status] = (acc[ticket.status] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([status, count]) => ({
+      name: status,
+      value: count,
+    }));
+  };
+
+  const getCategoryChartData = () => {
+    const counts = tickets.reduce((acc, ticket) => {
+      acc[ticket.category_name] = (acc[ticket.category_name] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([category, count]) => ({
+      name: category,
+      value: count,
+    }));
   };
 
   useEffect(() => {
@@ -61,56 +83,52 @@ export default function TableTickets() {
   if (loadingUser || loadingTickets) return <p>Cargando...</p>;
   if (errorUser) return <p>Error usuario: {errorUser.message}</p>;
   if (errorTickets) return <p>Error tickets: {errorTickets.message}</p>;
-
-  if (!user) {
-    return <a href="/.auth/login/aad">Iniciar sesión con Office365</a>;
-  }
+  if (!user) return <a href="/.auth/login/aad">Iniciar sesión con Office365</a>;
 
   return (
-    <div>
-      <h3>Hi {user.userDetails} 👋</h3>
-
-      <Button variant="contained" onClick={() => setOpenDrawer(true)} sx={{ mb: 2 }}>
-        Ver Gráficos
-      </Button>
-
-      <TableContainer component={Paper}>
-        <Table sx={{ tableLayout: 'fixed' }} size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Priority</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell sx={{ width: 30 }}>Status</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell sx={{ width: 60 }}>Assigned Agent</TableCell>
-              <TableCell>Created At</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tickets.map((ticket) => (
-              <TableRow key={ticket.ticket_id}>
-                <TableCell>{ticket.priority}</TableCell>
-                <TableCell>{ticket.title}</TableCell>
-                <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
-                <TableCell>{ticket.category_name}</TableCell>
-                <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.agent_name}</TableCell>
-                <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
+    <Box sx={{ display: 'flex' }}>
+      
+      {/* Tabla de Tickets */}
+      <Box sx={{ flex: 3, p: 2 }}>
+        <h3>Hi {user.userDetails} 👋</h3>
+        <TableContainer component={Paper}>
+          <Table sx={{ tableLayout: 'fixed' }} size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Assigned Agent</TableCell>
+                <TableCell>Created At</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow key={ticket.ticket_id}>
+                  <TableCell>{ticket.title}</TableCell>
+                  <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
+                  <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
+                  <TableCell>{ticket.name}</TableCell>
+                  <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {tickets.length === 0 && <p>No tienes tickets registrados.</p>}
+        {tickets.length === 0 && <p>No tienes tickets registrados.</p>}
+      </Box>
 
-      {/* Drawer para mostrar gráficos */}
-      <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
-        <Box sx={{ width: 350, p: 2 }}>
-          <TicketsChart tickets={tickets} />
-        </Box>
-      </Drawer>
-    </div>
+      {/* Dashboard de Gráficos */}
+      <Box sx={{ flex: 2, p: 2 }}>
+        <TicketDashboard 
+          statusChartData={getStatusChartData()} 
+          categoryChartData={getCategoryChartData()} 
+        />
+      </Box>
+
+    </Box>
   );
 }
+
+export default TableTickets;
