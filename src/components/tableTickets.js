@@ -20,9 +20,24 @@ import {
 
 export default function TableTickets() {
     
-  const { user, loading, error } = useAzureUser();
-  if (loading) return <p>Cargando usuario...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { user, loading, error, getUser } = useAzureUser();
+
+  return (
+    <div>
+      <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
+
+      <button onClick={getUser}>Obtener Usuario</button>
+
+      {loading && <p>Cargando usuario...</p>}
+      {error && <p>Error: {error.message}</p>}
+
+      {user && (
+        <div>
+          <h1>Hola {user.user_claims.find(c => c.typ === 'name')?.val}!</h1>
+        </div>
+      )}
+    </div>
+  );
     //const user = 'esteban'
     //const {data, loading, error} = useAzureUser(url);
     //const user = useAzureUser();
@@ -66,7 +81,7 @@ export default function TableTickets() {
         }
       };*/
 
-  return (
+  /*return (
     <div>
       <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
     <Login />
@@ -76,7 +91,7 @@ export default function TableTickets() {
       <p>ID de usuario: {user?.id}</p>
     </div>
     </div>
-  );
+  );*/
 }
 /*
 <TableContainer component={Paper}>

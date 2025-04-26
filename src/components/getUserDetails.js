@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const useAzureUser = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const getUser = () => {
+    setLoading(true);
     fetch('/.auth/me')
       .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
       })
       .then(data => {
@@ -25,13 +24,9 @@ const useAzureUser = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  };
 
-  useEffect(() => {
-    console.log('Usuario actualizado:', user);
-  }, [user]);
-
-  return { user, loading, error };
+  return { user, loading, error, getUser };
 };
 
 export default useAzureUser;
