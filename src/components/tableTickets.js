@@ -20,7 +20,9 @@ import {
 
 export default function TableTickets() {
     
-  const user = useAzureUser();
+  const { user, loading, error } = useAzureUser();
+  if (loading) return <p>Cargando usuario...</p>;
+  if (error) return <p>Error: {error.message}</p>;
     //const user = 'esteban'
     //const {data, loading, error} = useAzureUser(url);
     //const user = useAzureUser();
@@ -70,7 +72,7 @@ export default function TableTickets() {
     <Login />
     
     <div>
-      <h1>Hola {user?.user_claims?.find(claim => claim.typ === 'name')?.val}!</h1>
+    <h1>Hola {user?.user_claims?.find(claim => claim.typ === 'name')?.val}!</h1>
       <p>ID de usuario: {user?.id}</p>
     </div>
     </div>
