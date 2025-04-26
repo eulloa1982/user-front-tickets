@@ -97,7 +97,7 @@ export default function TableTickets() {
       <h3>Hi {user.userDetails} 👋</h3>
 
       <TableContainer component={Paper}>
-        <Table sx={{ tableLayout: 'fixed', width: '100%' }}>
+        <Table sx={{ tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow>
               <TableCell>Title</TableCell>
@@ -109,12 +109,15 @@ export default function TableTickets() {
           </TableHead>
           <TableBody>
             {tickets.map((ticket) => (
-              <TableRow key={ticket.ticket_id}>
-                <TableCell>{ticket.title}</TableCell>
-                <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                <TableCell sx={{ width: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{renderStatusIcon(ticket.status)}</TableCell>
-                <TableCell>{ticket.name}</TableCell>
-                <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
+              <TableRow 
+                key={ticket.ticket_id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                  <TableCell>{ticket.title}</TableCell>
+                  <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
+                  <TableCell sx={{ width: 30, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{renderStatusIcon(ticket.status)}</TableCell>
+                  <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.name}</TableCell>
+                  <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
