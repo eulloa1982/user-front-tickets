@@ -110,7 +110,7 @@ function TableTickets() {
                   <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
                   <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
                   <TableCell>{ticket.category_name}</TableCell>
-                  <TableCell>{ticket.aget_name}</TableCell>
+                  <TableCell>{ticket.agent_name}</TableCell>
                   <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
