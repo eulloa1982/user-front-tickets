@@ -37,7 +37,8 @@ export default function TableTickets() {
           return res.json();
         })
         .then(data => {
-          setTickets(data.tickets || []); // Ajusta si tu respuesta tiene otra estructura
+          console.log(data)
+          setTickets(data['ResultSets']['Table1'].tickets || []); // Ajusta si tu respuesta tiene otra estructura
           setLoadingTickets(false);
         })
         .catch(err => {
