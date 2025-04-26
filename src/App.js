@@ -3,9 +3,11 @@ import './App.css';
 import IframeForm from './components/iframeForm'; // <- nombre de componente en mayúscula
 import TableTickets from './components/tableTickets';
 import ButtonAppBar from './components/navbar';
+//import useAutoLogin from './components/authProvider';
 import { Box } from '@mui/material';
 
 function App() {
+  //useAutoLogin();
   const [seccion, setSeccion] = useState("myTickets");
 
   const renderContenido = () => {

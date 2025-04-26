@@ -2,14 +2,14 @@ import * as React from 'react';
 /*import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box, Typography
 } from '@mui/material';*/
-//import EditIcon from '@mui/icons-material/Edit';
-//import DeleteIcon from '@mui/icons-material/Delete';
+//import EditIcon from '@mui/icons-material/Edit';login
+import Login from '@mui/icons-material/Login';
 //import DoneIcon from '@mui/icons-material/Done';
 //import ScheduleIcon from '@mui/icons-material/Schedule';
 import useAzureUser from './getUserDetails';
 import { useEffect, useState } from 'react';
 import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton
   } from '@mui/material';
 
 /*const rows = [
@@ -19,10 +19,24 @@ import {
 ];*/
 
 export default function TableTickets() {
-    const user = useAzureUser();
-    const [tickets, setTickets] = useState([]);
-    console.log(user)
-    useEffect(() => {
+    
+    const { user, loading, error } = useAzureUser();
+
+  if (loading) {
+    return <p>Cargando usuario...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
+
+    //const user = 'esteban'
+    //const {data, loading, error} = useAzureUser(url);
+    //const user = useAzureUser();
+    //console.log(JSON.stringify(user));
+    //const [tickets, setTickets] = useState([]);
+   // console.log(JSON.stringify(data, null, 2))
+   /* useEffect(() => {
       if (!user) return;
   
       fetch('https://<TU_LOGICAPP_URL>', {
@@ -33,7 +47,7 @@ export default function TableTickets() {
         .then(res => res.json())
         .then(setTickets)
         .catch(err => console.error('Error al cargar tickets:', err));
-    }, [user]);
+    }, [user]);*/
   
 
 
@@ -60,8 +74,19 @@ export default function TableTickets() {
       };*/
 
   return (
-    <div><a href="/.auth/login/aad">Iniciar sesión con Office365</a>
-    <TableContainer component={Paper}>
+    <div>
+      <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
+    <Login />
+    
+    <div>
+      <h1>Hola {user?.user_claims?.find(claim => claim.typ === 'name')?.val}!</h1>
+      <p>ID de usuario: {user?.id}</p>
+    </div>
+    </div>
+  );
+}
+/*
+<TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="tabla de tickets">
         <TableHead>
           <TableRow>
@@ -71,20 +96,18 @@ export default function TableTickets() {
           </TableRow>
         </TableHead>
         <TableBody>
-        {tickets.map((ticket) => (
+        
+        </TableBody>
+      </Table>
+    </TableContainer>
+{tickets.map((ticket) => (
           <TableRow key={ticket.Id}>
             <TableCell>{ticket.Id}</TableCell>
             <TableCell>{ticket.Subject}</TableCell>
             <TableCell>{ticket.Status}</TableCell>
           </TableRow>
         ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </div>
-  );
-}
-/*
+
 {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
