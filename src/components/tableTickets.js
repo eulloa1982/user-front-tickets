@@ -60,6 +60,7 @@ export default function TableTickets() {
       };*/
 
   return (
+    <div><a href="/.auth/login/aad">Iniciar sesión con Office365</a>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="tabla de tickets">
         <TableHead>
@@ -80,6 +81,7 @@ export default function TableTickets() {
         </TableBody>
       </Table>
     </TableContainer>
+    </div>
   );
 }
 /*
