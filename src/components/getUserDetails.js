@@ -15,8 +15,10 @@ const useAzureUser = () => {
       })
       .then(data => {
         console.log('Respuesta de /.auth/me:', data);
-        if (data?.length > 0) {
-          setUser(data[0]);
+        if (data?.clientPrincipal) {
+          setUser(data.clientPrincipal);
+        } else {
+          setUser(null);
         }
       })
       .catch(err => {
