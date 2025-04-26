@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import LeftBar from './leftBar';
+import useAzureFullUser from './useAzureFullUser';
 
 export default function ButtonAppBar({ onMenuClick }) {
   const [state, setState] = React.useState({
@@ -15,6 +16,10 @@ export default function ButtonAppBar({ onMenuClick }) {
     bottom: false,
     right: false,
   });
+  const { user, loading, error } = useAzureFullUser();
+  if (loading) return <p>Cargando datos del usuario...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  console.log(user.officePhone);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
