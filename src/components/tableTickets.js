@@ -30,7 +30,7 @@ export default function TableTickets() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: user.userDetails })  // 👈 Mandamos el email en el body
+        body: JSON.stringify({ userEmail: user.userDetails })  // 👈 Mandamos el email en el body
       })
         .then(res => {
           if (!res.ok) throw new Error('Error al recuperar tickets');
