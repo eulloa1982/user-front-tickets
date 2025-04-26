@@ -7,6 +7,7 @@ const useAzureUser = () => {
     fetch('/.auth/me')
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         if (data?.length > 0) setUser(data[0]);
       })
       .catch(err => console.error('Error al obtener usuario:', err));
