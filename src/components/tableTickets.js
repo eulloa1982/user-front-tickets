@@ -1,11 +1,16 @@
 import * as React from 'react';
-import {
+/*import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box, Typography
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DoneIcon from '@mui/icons-material/Done';
-import ScheduleIcon from '@mui/icons-material/Schedule';
+} from '@mui/material';*/
+//import EditIcon from '@mui/icons-material/Edit';
+//import DeleteIcon from '@mui/icons-material/Delete';
+//import DoneIcon from '@mui/icons-material/Done';
+//import ScheduleIcon from '@mui/icons-material/Schedule';
+import useAzureUser from './getUserDetails';
+import { useEffect, useState } from 'react';
+import {
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+  } from '@mui/material';
 
 const rows = [
   { id: 101, subject: 'Error al iniciar sesión', status: 'Abierto' },
@@ -14,7 +19,25 @@ const rows = [
 ];
 
 export default function TableTickets() {
-    const renderStatusCell = (status) => {
+    const user = useAzureUser();
+    const [tickets, setTickets] = useState([]);
+  
+    useEffect(() => {
+      if (!user) return;
+  
+      fetch('https://<TU_LOGICAPP_URL>', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userEmail: user.userDetails })
+      })
+        .then(res => res.json())
+        .then(setTickets)
+        .catch(err => console.error('Error al cargar tickets:', err));
+    }, [user]);
+  
+
+
+    /*const renderStatusCell = (status) => {
         if (status === 'Cerrado') {
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -34,7 +57,7 @@ export default function TableTickets() {
             <Typography variant="body2">{status}</Typography>
           );
         }
-      };
+      };*/
 
   return (
     <TableContainer component={Paper}>
@@ -47,7 +70,20 @@ export default function TableTickets() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+        {tickets.map((ticket) => (
+          <TableRow key={ticket.Id}>
+            <TableCell>{ticket.Id}</TableCell>
+            <TableCell>{ticket.Subject}</TableCell>
+            <TableCell>{ticket.Status}</TableCell>
+          </TableRow>
+        ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+/*
+{rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.subject}</TableCell>
@@ -61,9 +97,4 @@ export default function TableTickets() {
                 </IconButton>
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
+          ))}*/
