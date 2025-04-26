@@ -11,6 +11,7 @@ const useAzureUser = () => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
+        console.log(res.json)
         return res.json();
       })
       .then(data => {
