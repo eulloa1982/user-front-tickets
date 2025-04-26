@@ -21,7 +21,8 @@ import {
 export default function TableTickets() {
     
   const { user, loading, error, getUser } = useAzureUser();
-
+  console.log(getUser);
+  
   return (
     <div>
       <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
