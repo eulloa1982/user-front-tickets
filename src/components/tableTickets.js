@@ -7,34 +7,84 @@ import * as React from 'react';
 //import DoneIcon from '@mui/icons-material/Done';
 //import ScheduleIcon from '@mui/icons-material/Schedule';
 import useAzureUser from './getUserDetails';
-/*import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton
-  } from '@mui/material';*/
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+} from '@mui/material';
 
-/*const rows = [
-  { id: 101, subject: 'Error al iniciar sesión', status: 'Abierto' },
-  { id: 102, subject: 'Solicitud de acceso', status: 'Pendiente' },
-  { id: 103, subject: 'Reinicio de contraseña', status: 'Cerrado' },
-];*/
+
 
 export default function TableTickets() {
     
   const { user, loading, error} = useAzureUser();
-  console.log('loading:', loading);
-  console.log('error:', error);
-  console.log('user:', user);
+  const [tickets, setTickets] = useState([]);
+  const [loadingTickets, setLoadingTickets] = useState(false);
+  const [errorTickets, setErrorTickets] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      setLoadingTickets(true);
+  
+      fetch('https://prod-52.eastus2.logic.azure.com:443/workflows/01728280e2a64bc8ad6cbbae397ed709/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=1oRqfyk4UYY6Who3R9Kb966-gOaobOy0ojQbbOLgRY0', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: user.userDetails })  // 👈 Mandamos el email en el body
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Error al recuperar tickets');
+          return res.json();
+        })
+        .then(data => {
+          setTickets(data.tickets || []); // Ajusta si tu respuesta tiene otra estructura
+          setLoadingTickets(false);
+        })
+        .catch(err => {
+          console.error('Error al cargar tickets:', err);
+          setErrorTickets(err);
+          setLoadingTickets(false);
+        });
+    }
+  }, [user]);
+  
+
+  if (loadingUser || loadingTickets) return <p>Cargando...</p>;
+  if (errorUser) return <p>Error usuario: {errorUser.message}</p>;
+  if (errorTickets) return <p>Error tickets: {errorTickets.message}</p>;
+
+  if (!user) {
+    return <a href="/.auth/login/aad">Iniciar sesión con Office365</a>;
+  }
 
   return (
     <div>
-      {loading && <p>Cargando usuario...</p>}
-      {error && <p>Error: {error.message}</p>}
+      <h1>Hola {user.userDetails} 👋</h1>
 
-      {user ? (
-        <h1>Hola {user.userDetails} 👋</h1>
-      ) : (
-        !loading && <a href="/.auth/login/aad">Iniciar sesión con Office365</a> 
-      )}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Asunto</TableCell>
+              <TableCell>Estado</TableCell>
+              <TableCell>Fecha Creación</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tickets.map((ticket) => (
+              <TableRow key={ticket.id}>
+                <TableCell>{ticket.id}</TableCell>
+                <TableCell>{ticket.subject}</TableCell>
+                <TableCell>{ticket.status}</TableCell>
+                <TableCell>{new Date(ticket.createdAt).toLocaleDateString()}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {tickets.length === 0 && <p>No tienes tickets registrados.</p>}
     </div>
   );
     //const user = 'esteban'
