@@ -9,9 +9,12 @@ import * as React from 'react';
 import useAzureUser from './getUserDetails';
 import { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip
 } from '@mui/material';
-
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 export default function TableTickets() {
@@ -20,6 +23,37 @@ export default function TableTickets() {
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
+
+  const renderStatusIcon = (status) => {
+    switch (status) {
+      case 'Open':
+        return (
+          <Tooltip title="Abierto">
+            <FiberManualRecordIcon sx={{ color: 'green' }} />
+          </Tooltip>
+        );
+      case 'New':
+        return (
+          <Tooltip title="Nuevo">
+            <NewReleasesIcon sx={{ color: 'blue' }} />
+          </Tooltip>
+        );
+      case 'In Processing':
+        return (
+          <Tooltip title="En Proceso">
+            <HourglassEmptyIcon sx={{ color: 'orange' }} />
+          </Tooltip>
+        );
+      case 'Closed':
+        return (
+          <Tooltip title="Cerrado">
+            <CheckCircleIcon sx={{ color: 'gray' }} />
+          </Tooltip>
+        );
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -77,10 +111,10 @@ export default function TableTickets() {
           <TableBody>
             {tickets.map((ticket) => (
               <TableRow key={ticket.ticket_id}>
-                <TableCell>{ticket.id}</TableCell>
+                <TableCell sx={{ width: 10 }}>{ticket.id}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                <TableCell>{ticket.status}</TableCell>
+                <TableCell sx={{ width: 20 }}>{renderStatusIcon(ticket.status)}</TableCell>
                 <TableCell>{ticket.name}</TableCell>
                 <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
@@ -92,96 +126,5 @@ export default function TableTickets() {
       {tickets.length === 0 && <p>No tienes tickets registrados.</p>}
     </div>
   );
-    //const user = 'esteban'
-    //const {data, loading, error} = useAzureUser(url);
-    //const user = useAzureUser();
-    //console.log(JSON.stringify(user));
-    //const [tickets, setTickets] = useState([]);
-   // console.log(JSON.stringify(data, null, 2))
-   /* useEffect(() => {
-      if (!user) return;
-  
-      fetch('https://<TU_LOGICAPP_URL>', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userEmail: user.userDetails })
-      })
-        .then(res => res.json())
-        .then(setTickets)
-        .catch(err => console.error('Error al cargar tickets:', err));
-    }, [user]);*/
-  
-
-
-    /*const renderStatusCell = (status) => {
-        if (status === 'Cerrado') {
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <DoneIcon color="success" />
-              <Typography variant="body2">Cerrado</Typography>
-            </Box>
-          );
-        } else if (status === 'Abierto') {
-          return (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ScheduleIcon color="warning" />
-              <Typography variant="body2">Abierto</Typography>
-            </Box>
-          );
-        } else {
-          return (
-            <Typography variant="body2">{status}</Typography>
-          );
-        }
-      };*/
-
-  /*return (
-    <div>
-      <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
-    <Login />
     
-    <div>
-    <h1>Hola {user?.user_claims?.find(claim => claim.typ === 'name')?.val}!</h1>
-      <p>ID de usuario: {user?.id}</p>
-    </div>
-    </div>
-  );*/
 }
-/*
-<TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="tabla de tickets">
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Asunto</TableCell>
-            <TableCell>Estado</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        
-        </TableBody>
-      </Table>
-    </TableContainer>
-{tickets.map((ticket) => (
-          <TableRow key={ticket.Id}>
-            <TableCell>{ticket.Id}</TableCell>
-            <TableCell>{ticket.Subject}</TableCell>
-            <TableCell>{ticket.Status}</TableCell>
-          </TableRow>
-        ))}
-
-{rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.subject}</TableCell>
-              <TableCell>{renderStatusCell(row.status)}</TableCell>
-              <TableCell>
-                <IconButton color="primary">
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="error">
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}*/
