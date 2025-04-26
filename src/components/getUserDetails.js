@@ -13,6 +13,7 @@ const useAzureUser = () => {
         return res.json();
       })
       .then(data => {
+        console.log('Respuesta de /.auth/me:', data);
         if (data?.length > 0) {
           setUser(data[0]);
         }
