@@ -31,7 +31,7 @@ export default function TableTickets() {
       {error && <p>Error: {error.message}</p>}
 
       {user ? (
-        <h1>Hola {user.clientPrincipal.userDetails} 👋</h1>
+        <h1>Hola {user.userDetails} 👋</h1>
       ) : (
         !loading && <a href="/.auth/login/aad">Iniciar sesión con Office365</a> 
       )}
