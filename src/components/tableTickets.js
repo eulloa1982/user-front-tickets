@@ -20,14 +20,11 @@ import {
 
 export default function TableTickets() {
     
-  const { user, loading, error, getUser } = useAzureUser();
+  const { user, loading, error} = useAzureUser();
   console.log(user);
 
   return (
     <div>
-      <a href="/.auth/login/aad">Iniciar sesión con Office365</a>
-
-      <button onClick={getUser}>Obtener Usuario</button>
 
       {loading && <p>Cargando usuario...</p>}
       {error && <p>Error: {error.message}</p>}
