@@ -70,6 +70,7 @@ export default function TableTickets() {
               <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Assigned Agent</TableCell>
               <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
@@ -78,8 +79,9 @@ export default function TableTickets() {
               <TableRow key={ticket.ticket_id}>
                 <TableCell>{ticket.id}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
-                <TableCell>{ticket.description}</TableCell>
+                <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
                 <TableCell>{ticket.status}</TableCell>
+                <TableCell>{ticket.name}</TableCell>
                 <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
