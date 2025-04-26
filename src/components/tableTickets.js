@@ -1,55 +1,33 @@
 import * as React from 'react';
-/*import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Box, Typography
-} from '@mui/material';*/
-//import EditIcon from '@mui/icons-material/Edit';login
-//import Login from '@mui/icons-material/Login';
-//import DoneIcon from '@mui/icons-material/Done';
-//import ScheduleIcon from '@mui/icons-material/Schedule';
-import useAzureUser from './getUserDetails';
 import { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip, Button, Drawer, Box
 } from '@mui/material';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import useAzureUser from './getUserDetails';
+import TicketsChart from './ticketsChart'; // 👈 nuevo componente de gráficos
 
 export default function TableTickets() {
-    
   const { user, loading: loadingUser, error: errorUser } = useAzureUser();
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false); // 👈 Drawer control
 
   const renderStatusIcon = (status) => {
     switch (status) {
       case 'Open':
-        return (
-          <Tooltip title="Abierto">
-            <FiberManualRecordIcon sx={{ color: 'green' }} />
-          </Tooltip>
-        );
+        return <Tooltip title="Open"><FiberManualRecordIcon sx={{ color: 'green' }} /></Tooltip>;
       case 'New':
-        return (
-          <Tooltip title="Nuevo">
-            <NewReleasesIcon sx={{ color: 'blue' }} />
-          </Tooltip>
-        );
+        return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
       case 'In Processing':
-        return (
-          <Tooltip title="En Proceso">
-            <HourglassEmptyIcon sx={{ color: 'orange' }} />
-          </Tooltip>
-        );
+        return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
       case 'Closed':
-        return (
-          <Tooltip title="Cerrado">
-            <CheckCircleIcon sx={{ color: 'gray' }} />
-          </Tooltip>
-        );
+      case 'Resolved':
+        return <Tooltip title="Closed"><CheckCircleIcon sx={{ color: 'gray' }} /></Tooltip>;
       default:
         return null;
     }
@@ -58,21 +36,18 @@ export default function TableTickets() {
   useEffect(() => {
     if (user) {
       setLoadingTickets(true);
-  
+
       fetch('https://prod-52.eastus2.logic.azure.com:443/workflows/01728280e2a64bc8ad6cbbae397ed709/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=1oRqfyk4UYY6Who3R9Kb966-gOaobOy0ojQbbOLgRY0', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userEmail: user.userDetails })  // 👈 Mandamos el email en el body
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userEmail: user.userDetails })
       })
         .then(res => {
           if (!res.ok) throw new Error('Error al recuperar tickets');
           return res.json();
         })
         .then(data => {
-          console.log(data['ResultSets']['Table1'])
-          setTickets(data['ResultSets']['Table1'] || []); // Ajusta si tu respuesta tiene otra estructura
+          setTickets(data['ResultSets']['Table1'] || []);
           setLoadingTickets(false);
         })
         .catch(err => {
@@ -82,7 +57,6 @@ export default function TableTickets() {
         });
     }
   }, [user]);
-  
 
   if (loadingUser || loadingTickets) return <p>Cargando...</p>;
   if (errorUser) return <p>Error usuario: {errorUser.message}</p>;
@@ -96,28 +70,29 @@ export default function TableTickets() {
     <div>
       <h3>Hi {user.userDetails} 👋</h3>
 
+      <Button variant="contained" onClick={() => setOpenDrawer(true)} sx={{ mb: 2 }}>
+        Ver Gráficos
+      </Button>
+
       <TableContainer component={Paper}>
         <Table sx={{ tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow>
               <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
-              <TableCell sx={{ width: 10, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Status</TableCell>
+              <TableCell sx={{ width: 10 }}>Status</TableCell>
               <TableCell>Assigned Agent</TableCell>
               <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tickets.map((ticket) => (
-              <TableRow 
-                key={ticket.ticket_id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                  <TableCell>{ticket.title}</TableCell>
-                  <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                  <TableCell sx={{ width: 30, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{renderStatusIcon(ticket.status)}</TableCell>
-                  <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.name}</TableCell>
-                  <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
+              <TableRow key={ticket.ticket_id}>
+                <TableCell>{ticket.title}</TableCell>
+                <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
+                <TableCell>{renderStatusIcon(ticket.status)}</TableCell>
+                <TableCell sx={{ width: 100, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.name}</TableCell>
+                <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -125,7 +100,13 @@ export default function TableTickets() {
       </TableContainer>
 
       {tickets.length === 0 && <p>No tienes tickets registrados.</p>}
+
+      {/* Drawer para mostrar gráficos */}
+      <Drawer anchor="right" open={openDrawer} onClose={() => setOpenDrawer(false)}>
+        <Box sx={{ width: 350, p: 2 }}>
+          <TicketsChart tickets={tickets} />
+        </Box>
+      </Drawer>
     </div>
   );
-    
 }
