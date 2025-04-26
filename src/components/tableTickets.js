@@ -7,10 +7,10 @@ import Login from '@mui/icons-material/Login';
 //import DoneIcon from '@mui/icons-material/Done';
 //import ScheduleIcon from '@mui/icons-material/Schedule';
 import useAzureUser from './getUserDetails';
-import { useEffect, useState } from 'react';
+/*import { useEffect, useState } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton
-  } from '@mui/material';
+  } from '@mui/material';*/
 
 /*const rows = [
   { id: 101, subject: 'Error al iniciar sesión', status: 'Abierto' },
