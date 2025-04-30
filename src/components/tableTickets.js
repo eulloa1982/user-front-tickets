@@ -21,13 +21,17 @@ function TableTickets() {
     switch (status) {
       case 'Open':
         return <Tooltip title="Open"><FiberManualRecordIcon sx={{ color: 'green' }} /></Tooltip>;
+      case 'Reopen by user':
+        return <Tooltip title="Reopened by you"><CheckCircleIcon sx={{ color: 'green' }} /></Tooltip>;
       case 'New':
         return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
       case 'In Processing':
         return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
       case 'Closed':
       case 'Resolved':
-        return <Tooltip title="Closed"><CheckCircleIcon sx={{ color: 'gray' }} /></Tooltip>;
+        return <div><Tooltip title="Closed"><CheckCircleIcon sx={{ color: 'gray' }} /></Tooltip>
+                    <Button variant="contained">Reopen</Button>
+        </div>;
       default:
         return null;
     }
