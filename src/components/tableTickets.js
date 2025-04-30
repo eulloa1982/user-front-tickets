@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip, Box, Button
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Tooltip, Box
 } from '@mui/material';
 
 import useAzureUser from './getUserDetails';
@@ -8,7 +8,9 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { reopenTicket } from '../utils/reopenTicket';
+//import { reopenTicket } from '../utils/reopenTicket';
+import ReopenButton from './reopenButton';
+
 
 import TicketDashboard from './ticketDashboard'; // 👈 Importamos el dashboard nuevo
 
@@ -18,25 +20,6 @@ function TableTickets() {
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
   
-  const handleReopen = async (ticketId) => {
-    try {
-      await reopenTicket(user.userDetails, ticketId);
-  
-      // Actualiza el estado del ticket localmente para reflejar el cambio
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket.ticket_id === ticketId
-            ? { ...ticket, status: 'Reopen by user', closed_ticket: 0 }
-            : ticket
-        )
-      );
-  
-      alert('Ticket reabierto correctamente');
-    } catch (error) {
-      console.error('Error al reabrir el ticket:', error);
-      alert('Hubo un problema al reabrir el ticket.');
-    }
-  };
   
   
 
@@ -50,29 +33,24 @@ function TableTickets() {
         return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
       case 'In Processing':
         return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
-      case 'Closed':
-      case 'Resolved':
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title="Closed">
-              <CheckCircleIcon sx={{ color: 'gray' }} />
-            </Tooltip>
-            <Button
-              size="small"
-              variant="contained"
-              onClick={() => handleReopen(ticketId)}
-              sx={{
-                borderRadius: '50px',
-                minWidth: '32px',
-                height: '32px',
-                padding: '0 12px',
-                fontSize: '0.75rem'
-              }}
-            >
-              Reopen
-            </Button>
-          </Box>
-        );
+        case 'Closed':
+          case 'Resolved':
+            return (
+              <ReopenButton
+                userEmail={user.userDetails}
+                ticketId={ticketId}
+                onSuccess={() => {
+                  setTickets((prevTickets) =>
+                    prevTickets.map((ticket) =>
+                      ticket.ticket_id === ticketId
+                        ? { ...ticket, status: 'Reopen by user', closed_ticket: 0 }
+                        : ticket
+                    )
+                  );
+                }}
+              />
+            );
+          
       default:
         return null;
     }
@@ -142,7 +120,7 @@ function TableTickets() {
               <TableRow>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell sx={{ width: 30 }}>Status</TableCell>
+                <TableCell sx={{ width: 60 }}>Status</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell sx={{ width: 60 }}>Assigned Agent</TableCell>
                 <TableCell>Created At</TableCell>
