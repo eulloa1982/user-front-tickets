@@ -126,7 +126,7 @@ function TableTickets() {
               <TableRow>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell sx={{ width: 60 }}>Status</TableCell>
+                <TableCell sx={{ width: 100 }}>Status</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell sx={{ width: 60 }}>Assigned Agent</TableCell>
                 <TableCell>Created At</TableCell>
