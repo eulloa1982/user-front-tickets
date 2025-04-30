@@ -8,8 +8,8 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-//import { reopenTicket } from '../utils/reopenTicket';
-import ReopenButton from './reopenButton';
+import ActionButton from './actionButton';
+import { reopenTicket } from '../utils/reopenTicket';
 
 
 import TicketDashboard from './ticketDashboard'; // 👈 Importamos el dashboard nuevo
@@ -20,10 +20,9 @@ function TableTickets() {
   const [loadingTickets, setLoadingTickets] = useState(false);
   const [errorTickets, setErrorTickets] = useState(null);
   
+  const renderStatusIcon = (ticket) => {
+    const { status, ticket_id, title } = ticket;
   
-  
-
-  const renderStatusIcon = (status, ticketId) => {
     switch (status) {
       case 'Open':
         return <Tooltip title="Open"><FiberManualRecordIcon sx={{ color: 'green' }} /></Tooltip>;
@@ -33,28 +32,35 @@ function TableTickets() {
         return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
       case 'In Processing':
         return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
-        case 'Closed':
-          case 'Resolved':
-            return (
-              <ReopenButton
-                userEmail={user.userDetails}
-                ticketId={ticketId}
-                onSuccess={() => {
-                  setTickets((prevTickets) =>
-                    prevTickets.map((ticket) =>
-                      ticket.ticket_id === ticketId
-                        ? { ...ticket, status: 'Reopen by user', closed_ticket: 0 }
-                        : ticket
-                    )
-                  );
-                }}
-              />
-            );
-          
+      case 'Closed':
+      case 'Resolved':
+        return (
+          <ActionButton
+            label="Reopen"
+            tooltip="Closed"
+            icon={<CheckCircleIcon sx={{ color: 'gray' }} />}
+            color="secondary"
+            confirmBeforeAction={true}
+            confirmTitle="¿Reabrir ticket?"
+            confirmText={`¿Estás seguro de que deseas reabrir el ticket: "${title}" (ID: ${ticket_id})?`}
+            onClick={async () => {
+              await reopenTicket(user.userDetails, ticket_id);
+              setTickets((prevTickets) =>
+                prevTickets.map((t) =>
+                  t.ticket_id === ticket_id
+                    ? { ...t, status: 'Reopen by user', closed_ticket: 0 }
+                    : t
+                )
+              );
+              alert('Ticket reabierto correctamente');
+            }}
+          />
+        );
       default:
         return null;
     }
   };
+  
   
   const getStatusChartData = () => {
     const counts = tickets.reduce((acc, ticket) => {
@@ -131,7 +137,7 @@ function TableTickets() {
                 <TableRow key={ticket.ticket_id}>
                   <TableCell>{ticket.title}</TableCell>
                   <TableCell sx={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ticket.description}</TableCell>
-                  <TableCell>{renderStatusIcon(ticket.status, ticket.ticket_id)}</TableCell>
+                  <TableCell>{renderStatusIcon(ticket)}</TableCell>
                   <TableCell>{ticket.category_name}</TableCell>
                   <TableCell>{ticket.agent_name}</TableCell>
                   <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
