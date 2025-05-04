@@ -8,8 +8,8 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ActionButton from './actionButton';
-import { reopenTicket } from '../utils/reopenTicket';
+//import ActionButton from './actionButton';
+//import { reopenTicket } from '../utils/reopenTicket';
 
 
 import TicketDashboard from './ticketDashboard'; // 👈 Importamos el dashboard nuevo
@@ -21,8 +21,9 @@ function TableTickets() {
   const [errorTickets, setErrorTickets] = useState(null);
   
   const renderStatusIcon = (ticket) => {
-    const { status, ticket_id, title } = ticket;
-  
+    //const { status, ticket_id, title } = ticket;
+    const {status} = ticket
+
     switch (status) {
       case 'Open':
         return <Tooltip title="Open"><FiberManualRecordIcon sx={{ color: 'green' }} /></Tooltip>;
@@ -34,28 +35,7 @@ function TableTickets() {
         return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
       case 'Closed':
       case 'Resolved':
-        return (
-          <ActionButton
-            label="Reopen"
-            tooltip="Closed"
-            icon={<CheckCircleIcon sx={{ color: 'gray' }} />}
-            color="secondary"
-            confirmBeforeAction={true}
-            confirmTitle="¿Reabrir ticket?"
-            confirmText={`¿Estás seguro de que deseas reabrir el ticket: "${title}" (ID: ${ticket_id})?`}
-            onClick={async () => {
-              await reopenTicket(user.userDetails, ticket_id);
-              setTickets((prevTickets) =>
-                prevTickets.map((t) =>
-                  t.ticket_id === ticket_id
-                    ? { ...t, status: 'Reopen by user', closed_ticket: 0 }
-                    : t
-                )
-              );
-              alert('Ticket reabierto correctamente');
-            }}
-          />
-        );
+        return <Tooltip title="Closed"><HourglassEmptyIcon sx={{ color: 'gray' }} /></Tooltip>;
       default:
         return null;
     }
@@ -163,3 +143,42 @@ function TableTickets() {
 }
 
 export default TableTickets;
+
+/*
+switch (status) {
+      case 'Open':
+        return <Tooltip title="Open"><FiberManualRecordIcon sx={{ color: 'green' }} /></Tooltip>;
+      case 'Reopen by user':
+        return <Tooltip title="Reopened by you"><CheckCircleIcon sx={{ color: 'green' }} /></Tooltip>;
+      case 'New':
+        return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
+      case 'In Processing':
+        return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
+      case 'Closed':
+      case 'Resolved':
+        return (
+          <ActionButton
+            label="Reopen"
+            tooltip="Closed"
+            icon={<CheckCircleIcon sx={{ color: 'gray' }} />}
+            color="secondary"
+            confirmBeforeAction={true}
+            confirmTitle="¿Reabrir ticket?"
+            confirmText={`¿Estás seguro de que deseas reabrir el ticket: "${title}" (ID: ${ticket_id})?`}
+            onClick={async () => {
+              await reopenTicket(user.userDetails, ticket_id);
+              setTickets((prevTickets) =>
+                prevTickets.map((t) =>
+                  t.ticket_id === ticket_id
+                    ? { ...t, status: 'Reopen by user', closed_ticket: 0 }
+                    : t
+                )
+              );
+              alert('Ticket reabierto correctamente');
+            }}
+          />
+        );
+      default:
+        return null;
+    }
+        */
