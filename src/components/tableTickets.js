@@ -67,6 +67,11 @@ function TableTickets() {
     }));
   };
 
+  const handleRowClick = (ticket) => {
+    setSelectedTicket(ticket);
+    setIsPopupOpen(true);
+  };
+
   useEffect(() => {
     if (user) {
       setLoadingTickets(true);
