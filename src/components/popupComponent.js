@@ -15,13 +15,15 @@ import { Close } from '@mui/icons-material';
 // Función auxiliar para asignar color según el estado
 const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {
-    case 'Open':
+    case 'new':
+      return 'primary'
+    case 'open':
       return 'success';
-    case 'In progress':
+    case 'in progress':
       return 'warning';
-    case 'Resolved':
+    case 'resolved':
       return 'default';
-    case 'Closed':
+    case 'closed':
       return 'secondary';
     default:
       return 'error';
