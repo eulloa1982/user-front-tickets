@@ -16,15 +16,15 @@ import { Close } from '@mui/icons-material';
 const getStatusColor = (status) => {
   switch (status?.toLowerCase()) {
     case 'Open':
-      return 'success';     // Verde
-    case 'In Progress':
-      return 'warning';     // Amarillo
+      return 'success';
+    case 'In progress':
+      return 'warning';
     case 'Resolved':
-      return 'default';     // Gris
+      return 'default';
     case 'Closed':
-      return 'secondary';   // Violeta
+      return 'secondary';
     default:
-      return 'error';       // Rojo para estados desconocidos
+      return 'error';
   }
 };
 
@@ -52,7 +52,7 @@ const Popup = ({ open, onClose, record }) => {
           pb: 1
         }}
       >
-        Detalles del Ticket
+        Ticket Details
         <Button onClick={onClose} size="small" color="inherit">
           <Close />
         </Button>
@@ -61,12 +61,12 @@ const Popup = ({ open, onClose, record }) => {
       <DialogContent dividers sx={{ pt: 2 }}>
         {record ? (
           <Grid container spacing={2}>
-            <InfoRow label="ID" value={record.id} />
-            <InfoRow label="Título" value={record.title} />
-            <InfoRow label="Agente" value={record.agent_name} />
+            <InfoRow label="ID" value={record.ticket_id} />
+            <InfoRow label="Title" value={record.title} />
+            <InfoRow label="Agent" value={record.agent_name} />
             <Grid item xs={12}>
               <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
-                Estado
+                Status
               </Typography>
               <Chip
                 label={record.status || '—'}
@@ -75,16 +75,30 @@ const Popup = ({ open, onClose, record }) => {
                 variant="filled"
               />
             </Grid>
-            <InfoRow label="Descripción" value={record.description} />
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+                Descripción
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: 400,
+                  whiteSpace: 'pre-wrap',
+                  lineHeight: 1.5
+                }}
+              >
+                {record.description || '—'}
+              </Typography>
+            </Grid>
           </Grid>
         ) : (
-          <Typography variant="body2">No hay datos disponibles.</Typography>
+          <Typography variant="body2">No data.</Typography>
         )}
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
         <Button onClick={onClose} variant="contained" color="primary">
-          Cerrar
+          Close
         </Button>
       </DialogActions>
     </Dialog>

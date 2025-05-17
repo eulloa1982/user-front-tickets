@@ -35,10 +35,10 @@ function TableTickets() {
       case 'New':
         return <Tooltip title="New"><NewReleasesIcon sx={{ color: 'blue' }} /></Tooltip>;
       case 'In Processing':
-        return <Tooltip title="In Processing"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
+        return <Tooltip title="In Process"><HourglassEmptyIcon sx={{ color: 'orange' }} /></Tooltip>;
       case 'Closed':
       case 'Resolved':
-        return <Tooltip title="Closed"><HourglassEmptyIcon sx={{ color: 'gray' }} /></Tooltip>;
+        return <Tooltip title="Resolved or Closed"><HourglassEmptyIcon sx={{ color: 'gray' }} /></Tooltip>;
       default:
         return null;
     }
@@ -87,6 +87,7 @@ function TableTickets() {
         })
         .then(data => {
           setTickets(data['ResultSets']['Table1'] || []);
+          console.log(data['ResultSets']['Table1'])
           setLoadingTickets(false);
         })
         .catch(err => {
