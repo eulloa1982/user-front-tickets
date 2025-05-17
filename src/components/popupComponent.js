@@ -63,7 +63,7 @@ const Popup = ({ open, onClose, record }) => {
           <Grid container spacing={2}>
             <InfoRow label="ID" value={record.id} />
             <InfoRow label="Título" value={record.title} />
-            <InfoRow label="Agente" value={record.agent} />
+            <InfoRow label="Agente" value={record.agent_name} />
             <Grid item xs={12}>
               <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
                 Estado
